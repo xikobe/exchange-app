@@ -1,33 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select } from '@chakra-ui/core';
+import SelectCurrency from './select-currency';
+import InputValue from './input-value';
 import { useExchangeContext } from '../../contexts/exchange';
 import { usePocketsContext } from '../../contexts/pockets';
 
 const RateCard = ({ trade }) => {
-  const { getCurrency, availableCurrencies, handleChangeCurrency } = useExchangeContext();
+  const { getCurrency } = useExchangeContext();
   const { getBalance } = usePocketsContext();
   const currencyType = getCurrency(trade);
 
-  const handleOnChange = (e) => {
-    handleChangeCurrency(trade, e.target.value);
-  };
-
   return (
     <>
-      <Select value={currencyType} onChange={handleOnChange} placeholder="Select option">
-        {
-          availableCurrencies.map((currency) => (
-            <option
-              key={currency}
-              value={currency}
-            >
-              {currency}
-
-            </option>
-          ))
-        }
-      </Select>
+      <SelectCurrency trade={trade} currencyType={currencyType} />
+      <InputValue trade={trade} />
       <p>
         Balance:
         {' '}

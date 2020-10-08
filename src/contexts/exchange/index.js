@@ -12,7 +12,8 @@ const ExchangeProvider = ({ children }) => {
   const [availableCurrencies, setAvailableCurrencies] = useState(['USD', 'EUR', 'GBP']);
   const [activeCurrency, setActiveCurrency] = useState('USD');
   const [tradeCurrency, setTradeCurrency] = useState('EUR');
-  const { data } = useRates({ base: activeCurrency, trade: tradeCurrency });
+  const { data: activeRate } = useRates({ base: activeCurrency });
+  const { data: tradeRate } = useRates({ base: tradeCurrency });
 
   const getCurrency = (isTrade) => (isTrade ? tradeCurrency : activeCurrency);
 
@@ -38,7 +39,8 @@ const ExchangeProvider = ({ children }) => {
       tradeCurrency,
       getCurrency,
       handleSwitchCurrency,
-      rate: data?.rates[tradeCurrency],
+      activeRate: activeRate?.rates[tradeCurrency],
+      tradeRate: tradeRate?.rates[activeCurrency],
       handleChangeCurrency,
     }}
     >

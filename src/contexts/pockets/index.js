@@ -13,13 +13,22 @@ const PocketsProvider = ({ children }) => {
     EUR: 90,
     GBP: 70,
   });
+  const [inputValue, setInputValue] = useState(0);
+  const [tradeValue, setTradeValue] = useState(0);
 
   const getBalance = (currency) => pocket[currency];
+
+  const getInputValue = (isTrade) => (isTrade ? tradeValue : inputValue);
 
   return (
     <PocketsContext.Provider value={{
       pocket,
       getBalance,
+      inputValue,
+      tradeValue,
+      setInputValue,
+      setTradeValue,
+      getInputValue,
     }}
     >
       {children}

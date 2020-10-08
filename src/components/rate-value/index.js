@@ -2,13 +2,13 @@ import React from 'react';
 import { useExchangeContext } from '../../contexts/exchange';
 
 const RateValue = () => {
-  const { rate, activeCurrency, tradeCurrency } = useExchangeContext();
+  const { activeRate, activeCurrency, tradeCurrency } = useExchangeContext();
 
-  if (!rate) {
+  if (!activeRate) {
     return null;
   }
 
-  return (<p>{`1${activeCurrency} = ${rate.toFixed(4)}${tradeCurrency}`}</p>);
+  return (<p>{`1${activeCurrency} = ${activeRate.toFixed(4)}${tradeCurrency}`}</p>);
 };
 
 export default RateValue;
