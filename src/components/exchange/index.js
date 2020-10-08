@@ -4,6 +4,7 @@ import RateCard from '../rate-card';
 import RateValue from '../rate-value';
 import ExchangeContext from '../../contexts/exchange';
 import SwitchCurrency from '../switch-currency';
+import SubmitExchange from './submit-exchange';
 
 const Exchange = () => (
   <Wrapper>
@@ -12,6 +13,7 @@ const Exchange = () => (
       <RateValue />
       <SwitchCurrency />
       <RateCard trade>Bar</RateCard>
+      <SubmitExchange />
     </ExchangeContext>
   </Wrapper>
 );

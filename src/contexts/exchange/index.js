@@ -9,28 +9,31 @@ const ExchangeContext = createContext();
 export const useExchangeContext = () => useContext(ExchangeContext);
 
 const ExchangeProvider = ({ children }) => {
-  const [availableCurrencies, setAvailableCurrencies] = useState(['USD', 'EUR', 'GBP']);
+  const [availableCurrencies] = useState(['USD', 'EUR', 'GBP']);
   const [activeCurrency, setActiveCurrency] = useState('USD');
   const [tradeCurrency, setTradeCurrency] = useState('EUR');
-  const { data: activeRate } = useRates({ base: activeCurrency });
-  const { data: tradeRate } = useRates({ base: tradeCurrency });
+  const { data: activeRate, isLoading: isLoadingActiveRate } = useRates({ base: activeCurrency });
+  const { data: tradeRate, isLoading: isLoadingTradeRate } = useRates({ base: tradeCurrency });
 
   const getCurrency = (isTrade) => (isTrade ? tradeCurrency : activeCurrency);
+
+  const getCurrencyOptions = (isTrade) => availableCurrencies.filter((currency) => (
+    !isTrade ? currency !== tradeCurrency : currency !== activeCurrency));
 
   const handleSwitchCurrency = () => {
     const tempActive = activeCurrency;
     const tempTrade = tradeCurrency;
     setActiveCurrency(tempTrade);
     setTradeCurrency(tempActive);
-  }
+  };
 
   const handleChangeCurrency = (isTrade, value) => {
-    if(isTrade) {
+    if (isTrade) {
       return setTradeCurrency(value);
     }
 
     return setActiveCurrency(value);
-  }
+  };
 
   return (
     <ExchangeContext.Provider value={{
@@ -39,8 +42,9 @@ const ExchangeProvider = ({ children }) => {
       tradeCurrency,
       getCurrency,
       handleSwitchCurrency,
-      activeRate: activeRate?.rates[tradeCurrency],
-      tradeRate: tradeRate?.rates[activeCurrency],
+      getCurrencyOptions,
+      activeRate: !isLoadingActiveRate && (activeRate.rates[tradeCurrency] || 1),
+      tradeRate: !isLoadingTradeRate && (tradeRate.rates[activeCurrency] || 1),
       handleChangeCurrency,
     }}
     >

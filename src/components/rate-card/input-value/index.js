@@ -9,14 +9,21 @@ const InputValue = ({ trade }) => {
 
   const getPrefix = (isTrade) => (isTrade ? '+' : '-');
 
+  useEffect(() => {
+    setTradeValue(getInputValue() * activeRate);
+  }, [activeRate]);
+
+  // useEffect(() => {
+  //   setTradeValue(getInputValue() * tradeRate);
+  // }, [tradeRate]);
+
   const handleOnChange = (e) => {
-    e.preventDefault();
     if (trade) {
-      setTradeValue(e.target.value);
-      setInputValue(e.target.value * tradeRate);
+      setTradeValue(parseFloat(e.target.value));
+      setInputValue(parseFloat(e.target.value * tradeRate));
     } else {
-      setTradeValue(e.target.value * activeRate);
-      setInputValue(e.target.value);
+      setTradeValue(parseFloat(e.target.value * activeRate));
+      setInputValue(parseFloat(e.target.value));
     }
   };
 

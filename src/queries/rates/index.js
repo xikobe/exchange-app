@@ -11,7 +11,6 @@ export const useRates = ({ base }) => useQuery(
   ['rates', base],
   getRates,
   {
-    // Refetch the data every second
     refetchInterval: 500000,
   },
 );
