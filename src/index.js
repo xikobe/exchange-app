@@ -1,7 +1,7 @@
 import React from 'react';
-import { theme, ThemeProvider, CSSReset } from "@chakra-ui/core";
+import { theme, ThemeProvider, CSSReset } from '@chakra-ui/core';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './components/app';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -10,5 +10,5 @@ ReactDOM.render(
       <App />
     </ThemeProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
