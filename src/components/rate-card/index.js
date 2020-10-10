@@ -5,6 +5,7 @@ import SelectCurrency from './select-currency';
 import InputValue from './input-value';
 import { useExchangeContext } from '../../contexts/exchange';
 import { usePocketsContext } from '../../contexts/pockets';
+import { Wrapper, InputWrapper, BalanceWrapper } from './styles';
 
 const RateCard = ({ trade }) => {
   const { getCurrency } = useExchangeContext();
@@ -12,15 +13,19 @@ const RateCard = ({ trade }) => {
   const currencyType = getCurrency(trade);
 
   return (
-    <>
-      <SelectCurrency trade={trade} currencyType={currencyType} />
-      <InputValue trade={trade} />
-      <Text color="white">
-        Balance:
-        {' '}
-        {getBalance(currencyType)}
-      </Text>
-    </>
+    <Wrapper>
+      <InputWrapper>
+        <SelectCurrency trade={trade} currencyType={currencyType} />
+        <InputValue trade={trade} />
+      </InputWrapper>
+      <BalanceWrapper>
+        <Text as="i" fontSize="sm" color="blue.300">
+          balance:
+          {' '}
+          {getBalance(currencyType) + currencyType}
+        </Text>
+      </BalanceWrapper>
+    </Wrapper>
   );
 };
 

@@ -1,47 +1,36 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Input } from '@chakra-ui/core';
+import { Input, Text } from '@chakra-ui/core';
 import { usePocketsContext } from '../../../contexts/pockets';
 import { useExchangeContext } from '../../../contexts/exchange';
+import { Wrapper, InputWrapper } from './styles';
+import { validateField } from './utils';
 
 const InputValue = ({ trade }) => {
-  const {
-    getInputValue, setTradeValue, setInputValue,
-  } = usePocketsContext();
-  const {
-    activeRate, tradeRate, exchangeError, validateExchange,
-  } = useExchangeContext();
+  const { getInputValue } = usePocketsContext();
+  const { validateExchange, handleChangeValues } = useExchangeContext();
+  const [error, setError] = useState(null);
   const getPrefix = (isTrade) => (isTrade ? '+' : '-');
 
   useEffect(() => {
-    setTradeValue(getInputValue() * activeRate);
-  }, [activeRate]);
-
-  useEffect(() => {
+    // we only want to validate the active pocket input for remaining balance
     if (!trade) {
-      validateExchange(getInputValue(trade));
+      validateExchange(getInputValue());
     }
   }, [getInputValue(trade)]);
 
   const handleOnChange = (e) => {
-    const tempValue = e.target.value;
-    const value = (tempValue.indexOf('.') >= 0) ? (tempValue.substr(0, tempValue.indexOf('.')) + tempValue.substr(tempValue.indexOf('.'), 3)) : tempValue;
-
-    if (trade) {
-      setTradeValue(value);
-      setInputValue((value * tradeRate).toFixed(2));
-    } else {
-      setTradeValue((value * activeRate).toFixed(2));
-      setInputValue(value);
-    }
+    validateField(e.target.value, setError);
+    handleChangeValues(e.target.value, trade);
   };
 
   return (
-    <>
-      <span>{ getPrefix(trade) }</span>
-      <Input type="number" pattern="^\d*(\.\d{0,2})?$" onChange={handleOnChange} value={getInputValue(trade)} placeholder="0" size="md" />
-      { !!exchangeError && !trade && <p>{exchangeError}</p> }
-    </>
+    <Wrapper>
+      <InputWrapper isInvalid={!!error}>
+        <Text color="white">{ getPrefix(trade) }</Text>
+        <Input textAlign="right" color="white" variant="unstyled" type="number" pattern="^\d*(\.\d{0,2})?$" onChange={handleOnChange} value={getInputValue(trade)} placeholder="0" size="md" />
+      </InputWrapper>
+    </Wrapper>
   );
 };
 

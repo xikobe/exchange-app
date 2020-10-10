@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Select } from '@chakra-ui/core';
 import { useExchangeContext } from '../../../contexts/exchange';
 
@@ -10,7 +11,7 @@ const SelectCurrency = ({ currencyType, trade }) => {
   };
 
   return (
-    <Select value={currencyType} onChange={handleOnChange} placeholder="Select option">
+    <Select padding="0 0 0 10px" width="100px" borderColor="transparent" backgroundColor="transparent" color="white" value={currencyType} onChange={handleOnChange} placeholder="Select option">
       {
         availableCurrencies.map((currency) => (
           <option
@@ -24,6 +25,11 @@ const SelectCurrency = ({ currencyType, trade }) => {
       }
     </Select>
   );
+};
+
+SelectCurrency.propTypes = {
+  currencyType: PropTypes.string,
+  trade: PropTypes.bool,
 };
 
 export default SelectCurrency;

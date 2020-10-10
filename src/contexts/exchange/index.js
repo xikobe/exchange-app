@@ -1,5 +1,5 @@
 import React, {
-  createContext, useContext, useState,
+  createContext, useContext, useState, useEffect,
 } from 'react';
 import PropTypes from 'prop-types';
 import { useRates } from '../../queries/rates';
@@ -14,10 +14,14 @@ const ExchangeProvider = ({ children }) => {
   const [activeCurrency, setActiveCurrency] = useState('USD');
   const [tradeCurrency, setTradeCurrency] = useState('EUR');
   const [exchangeError, setExchangeError] = useState(null);
-  const { getBalance } = usePocketsContext();
-  const { data: activeRate, isLoading: isLoadingActiveRate } = useRates({ base: activeCurrency });
-  const { data: tradeRate, isLoading: isLoadingTradeRate } = useRates({ base: tradeCurrency });
+  const {
+    getBalance, setInputValue, setTradeValue, getInputValue,
+  } = usePocketsContext();
+  const { data: activeRateData, isLoading: isLoadingActiveRate } = useRates({ base: activeCurrency });
+  const { data: tradeRateData, isLoading: isLoadingTradeRate } = useRates({ base: tradeCurrency });
 
+  const getActiveRate = () => !isLoadingActiveRate && (activeRateData.rates[tradeCurrency] || 1);
+  const getTradeRate = () => !isLoadingTradeRate && (tradeRateData.rates[activeCurrency] || 1);
   const getCurrency = (isTrade) => (isTrade ? tradeCurrency : activeCurrency);
 
   const getCurrencyOptions = (isTrade) => availableCurrencies.filter((currency) => (
@@ -48,6 +52,22 @@ const ExchangeProvider = ({ children }) => {
     return setExchangeError(null);
   };
 
+  const handleChangeValues = (value, isTrade) => {
+    const newValue = (value.indexOf('.') >= 0) ? (value.substr(0, value.indexOf('.')) + value.substr(value.indexOf('.'), 3)) : value;
+
+    if (isTrade) {
+      setTradeValue(newValue);
+      setInputValue((newValue * getTradeRate).toFixed(2));
+    } else {
+      setTradeValue((newValue * getActiveRate()).toFixed(2));
+      setInputValue(newValue);
+    }
+  };
+
+  useEffect(() => {
+    setTradeValue((getInputValue() * getActiveRate()).toFixed(2));
+  }, [getActiveRate()]);
+
   return (
     <ExchangeContext.Provider value={{
       availableCurrencies,
@@ -56,12 +76,14 @@ const ExchangeProvider = ({ children }) => {
       getCurrency,
       handleSwitchCurrency,
       getCurrencyOptions,
-      activeRate: !isLoadingActiveRate && (activeRate.rates[tradeCurrency] || 1),
-      tradeRate: !isLoadingTradeRate && (tradeRate.rates[activeCurrency] || 1),
+      activeRate: getActiveRate(),
+      tradeRate: getTradeRate(),
+      isLoadingRate: isLoadingActiveRate || isLoadingTradeRate,
       handleChangeCurrency,
       exchangeError,
       setExchangeError,
       validateExchange,
+      handleChangeValues,
     }}
     >
       { children}

@@ -9,7 +9,7 @@ const RateValue = () => {
     return null;
   }
 
-  return (<Text color="white">{`1${activeCurrency} = ${activeRate.toFixed(4)}${tradeCurrency}`}</Text>);
+  return (<Text marginRight="10px">{`1${activeCurrency} = ${activeRate.toFixed(4)}${tradeCurrency}`}</Text>);
 };
 
 export default RateValue;
