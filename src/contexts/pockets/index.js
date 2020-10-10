@@ -21,8 +21,8 @@ const PocketsProvider = ({ children }) => {
   const makeExchange = ({ activeCurrency, tradeCurrency }) => {
     setPocket((prevPocket) => ({
       ...prevPocket,
-      [activeCurrency]: prevPocket[activeCurrency] - inputValue,
-      [tradeCurrency]: prevPocket[tradeCurrency] + tradeValue,
+      [activeCurrency]: Number(prevPocket[activeCurrency]) - Number(inputValue),
+      [tradeCurrency]: Number(prevPocket[tradeCurrency]) + Number(tradeValue),
     }));
   };
 

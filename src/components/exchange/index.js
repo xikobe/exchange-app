@@ -9,10 +9,10 @@ import SubmitExchange from './submit-exchange';
 const Exchange = () => (
   <Wrapper>
     <ExchangeContext>
-      <RateCard>Foo</RateCard>
+      <RateCard />
       <RateValue />
       <SwitchCurrency />
-      <RateCard trade>Bar</RateCard>
+      <RateCard trade />
       <SubmitExchange />
     </ExchangeContext>
   </Wrapper>

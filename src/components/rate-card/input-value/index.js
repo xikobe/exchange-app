@@ -1,38 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Input } from '@chakra-ui/core';
 import { usePocketsContext } from '../../../contexts/pockets';
 import { useExchangeContext } from '../../../contexts/exchange';
 
 const InputValue = ({ trade }) => {
-  const { getInputValue, setTradeValue, setInputValue } = usePocketsContext();
-  const { activeRate, tradeRate } = useExchangeContext();
-
+  const {
+    getInputValue, setTradeValue, setInputValue,
+  } = usePocketsContext();
+  const {
+    activeRate, tradeRate, exchangeError, validateExchange,
+  } = useExchangeContext();
   const getPrefix = (isTrade) => (isTrade ? '+' : '-');
 
   useEffect(() => {
     setTradeValue(getInputValue() * activeRate);
   }, [activeRate]);
 
-  // useEffect(() => {
-  //   setTradeValue(getInputValue() * tradeRate);
-  // }, [tradeRate]);
+  useEffect(() => {
+    if (!trade) {
+      validateExchange(getInputValue(trade));
+    }
+  }, [getInputValue(trade)]);
 
   const handleOnChange = (e) => {
+    const tempValue = e.target.value;
+    const value = (tempValue.indexOf('.') >= 0) ? (tempValue.substr(0, tempValue.indexOf('.')) + tempValue.substr(tempValue.indexOf('.'), 3)) : tempValue;
+
     if (trade) {
-      setTradeValue(parseFloat(e.target.value));
-      setInputValue(parseFloat(e.target.value * tradeRate));
+      setTradeValue(value);
+      setInputValue((value * tradeRate).toFixed(2));
     } else {
-      setTradeValue(parseFloat(e.target.value * activeRate));
-      setInputValue(parseFloat(e.target.value));
+      setTradeValue((value * activeRate).toFixed(2));
+      setInputValue(value);
     }
   };
 
   return (
     <>
-      { !!getInputValue(trade) && <span>{ getPrefix(trade) }</span> }
-      <Input type="number" onChange={handleOnChange} value={getInputValue(trade)} placeholder="0" size="md" />
+      <span>{ getPrefix(trade) }</span>
+      <Input type="number" pattern="^\d*(\.\d{0,2})?$" onChange={handleOnChange} value={getInputValue(trade)} placeholder="0" size="md" />
+      { !!exchangeError && !trade && <p>{exchangeError}</p> }
     </>
   );
+};
+
+InputValue.propTypes = {
+  trade: PropTypes.bool,
 };
 
 export default InputValue;

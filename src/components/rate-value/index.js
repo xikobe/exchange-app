@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from '@chakra-ui/core';
 import { useExchangeContext } from '../../contexts/exchange';
 
 const RateValue = () => {
@@ -8,7 +9,7 @@ const RateValue = () => {
     return null;
   }
 
-  return (<p>{`1${activeCurrency} = ${activeRate.toFixed(4)}${tradeCurrency}`}</p>);
+  return (<Text color="white">{`1${activeCurrency} = ${activeRate.toFixed(4)}${tradeCurrency}`}</Text>);
 };
 
 export default RateValue;
