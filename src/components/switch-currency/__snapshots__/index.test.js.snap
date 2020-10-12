@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwitchCurrency renders correctly 1`] = `
+<Styled(div)>
+  <Button
+    icon="repeat"
+    loadingText="Fetching rate"
+    variant="outline"
+    variantColor="blue"
+  >
+    <RateValue />
+    <Icon
+      color="teal"
+      name="repeat"
+    />
+  </Button>
+</Styled(div)>
+`;
