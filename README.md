@@ -1,7 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Exchange app
-This is a small example app to showcase a mock exchange.
+This is a small example app to showcase a mock exchange. App is deployed to github pages here https://xikobe.github.io/exchange-app/
 
 - It polls exchange rates every 10 seconds
 - Has 3 hardcoded wallets in different currencies
