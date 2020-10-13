@@ -1,5 +1,5 @@
 import React, {
-  createContext, useContext, useState, useEffect,
+  createContext, useContext, useState, useEffect, useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 import { useRates } from '../../queries/rates';
@@ -14,14 +14,28 @@ const ExchangeProvider = ({ children }) => {
   const [activeCurrency, setActiveCurrency] = useState('USD');
   const [tradeCurrency, setTradeCurrency] = useState('EUR');
   const [exchangeError, setExchangeError] = useState(null);
+  const [inputValue, setInputValue] = useState(0);
+  const [tradeValue, setTradeValue] = useState(0);
   const {
-    getBalance, setInputValue, setTradeValue, getInputValue,
+    getBalance,
   } = usePocketsContext();
+
   const { data: activeRateData, isLoading: isLoadingActiveRate } = useRates({ base: activeCurrency });
   const { data: tradeRateData, isLoading: isLoadingTradeRate } = useRates({ base: tradeCurrency });
 
-  const getActiveRate = () => !isLoadingActiveRate && (activeRateData.rates[tradeCurrency] || 1);
+  // Returns correct value for input field
+  const getInputValue = useCallback((isTrade) => (isTrade ? tradeValue : inputValue), [tradeValue, inputValue]);
+
+  // Returns current active rate or 1 if the active and trade rates are the same
+  const getActiveRate = useCallback(
+    () => !isLoadingActiveRate && (activeRateData.rates[tradeCurrency] || 1),
+    [isLoadingActiveRate, activeRateData, tradeCurrency],
+  );
+
+  // Returns current trade rate for converting back
   const getTradeRate = () => !isLoadingTradeRate && (tradeRateData.rates[activeCurrency] || 1);
+
+  // Returns currency
   const getCurrency = (isTrade) => (isTrade ? tradeCurrency : activeCurrency);
 
   const getCurrencyOptions = (isTrade) => availableCurrencies.filter((currency) => (
@@ -66,7 +80,7 @@ const ExchangeProvider = ({ children }) => {
 
   useEffect(() => {
     setTradeValue((getInputValue() * getActiveRate()).toFixed(2));
-  }, [getActiveRate()]);
+  }, [getActiveRate, getInputValue]);
 
   return (
     <ExchangeContext.Provider value={{
@@ -84,6 +98,7 @@ const ExchangeProvider = ({ children }) => {
       setExchangeError,
       validateExchange,
       handleChangeValues,
+      getInputValue,
     }}
     >
       { children}

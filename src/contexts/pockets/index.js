@@ -13,12 +13,11 @@ const PocketsProvider = ({ children }) => {
     EUR: 90,
     GBP: 70,
   });
-  const [inputValue, setInputValue] = useState(0);
-  const [tradeValue, setTradeValue] = useState(0);
 
   const getBalance = (currency) => pocket[currency];
-  const getInputValue = (isTrade) => (isTrade ? tradeValue : inputValue);
-  const makeExchange = ({ activeCurrency, tradeCurrency }) => {
+  const makeExchange = ({
+    activeCurrency, tradeCurrency, inputValue, tradeValue,
+  }) => {
     setPocket((prevPocket) => ({
       ...prevPocket,
       [activeCurrency]: Number(prevPocket[activeCurrency]) - Number(inputValue),
@@ -30,11 +29,6 @@ const PocketsProvider = ({ children }) => {
     <PocketsContext.Provider value={{
       pocket,
       getBalance,
-      inputValue,
-      tradeValue,
-      setInputValue,
-      setTradeValue,
-      getInputValue,
       makeExchange,
     }}
     >

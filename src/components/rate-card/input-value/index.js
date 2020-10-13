@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Text } from '@chakra-ui/core';
-import { usePocketsContext } from '../../../contexts/pockets';
 import { useExchangeContext } from '../../../contexts/exchange';
 import { Wrapper, InputWrapper } from './styles';
 import { validateField } from './utils';
 
 const InputValue = ({ trade }) => {
-  const { getInputValue } = usePocketsContext();
-  const { validateExchange, handleChangeValues } = useExchangeContext();
+  const { validateExchange, handleChangeValues, getInputValue } = useExchangeContext();
   const [error, setError] = useState(null);
   const getPrefix = (isTrade) => (isTrade ? '+' : '-');
 
@@ -17,7 +15,7 @@ const InputValue = ({ trade }) => {
     if (!trade) {
       validateExchange(getInputValue());
     }
-  }, [getInputValue(trade)]);
+  }, [getInputValue, validateExchange, trade]);
 
   const handleOnChange = (e) => {
     validateField(e.target.value, setError);

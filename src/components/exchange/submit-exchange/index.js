@@ -6,10 +6,14 @@ import { Wrapper } from './styles';
 
 const SubmitExchange = () => {
   const { makeExchange } = usePocketsContext();
-  const { activeCurrency, tradeCurrency, exchangeError } = useExchangeContext();
+  const {
+    activeCurrency, tradeCurrency, exchangeError, getInputValue,
+  } = useExchangeContext();
 
   const handleOnClick = () => {
-    makeExchange({ activeCurrency, tradeCurrency });
+    makeExchange({
+      activeCurrency, tradeCurrency, inputValue: getInputValue(), tradeValue: getInputValue(true),
+    });
   };
 
   return (
