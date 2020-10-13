@@ -3,7 +3,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Exchange app
 This is a small example app to showcase a mock exchange.
 
-- It polls exchage rates every 10 seconds
+- It polls exchange rates every 10 seconds
 - Has 3 hardcoded wallets in different currencies
 - User is allowed to exchange if the balance is enough to do it
 
